@@ -7,7 +7,7 @@ const href = (id: string) => (home ? `#${id}` : `/#${id}`);
 ---
 <header class="nav" data-nav>
   <div class="nav-inner wrap">
-    <a class="brand" href={home ? '#home' : '/'} aria-label={`${profile.shortName} — home`}>
+    <a class="brand" href={home ? '#home' : '/'}>
       <span class="mono" aria-hidden="true">HM</span>
       <span class="brand-name">Hector Maytorena</span>
     </a>
@@ -65,7 +65,7 @@ const href = (id: string) => (home ? `#${id}` : `/#${id}`);
   .mono {
     display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px;
     font-weight: 700; font-size: 0.85rem; letter-spacing: 0.02em;
-    background: var(--blue); color: #fff;
+    background: var(--blue-fill); color: #fff;
   }
   .brand-name { font-weight: 600; letter-spacing: -0.01em; }
 
@@ -80,10 +80,10 @@ const href = (id: string) => (home ? `#${id}` : `/#${id}`);
   .nav-links a.active { color: #fff; background: rgba(255, 255, 255, 0.08); }
   .nav-cta {
     font: 600 0.9rem var(--font-display); text-decoration: none; color: #fff;
-    padding: 0.55rem 1rem; border-radius: 999px; background: var(--blue);
+    padding: 0.55rem 1rem; border-radius: 999px; background: var(--blue-fill);
     transition: background 0.2s;
   }
-  .nav-cta:hover { background: #5089f7; }
+  .nav-cta:hover { background: var(--blue-ink); }
 
   .menu-btn {
     display: none; margin-left: auto; width: 44px; height: 44px; border-radius: 12px;

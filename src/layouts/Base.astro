@@ -5,6 +5,8 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ogDefault from '../assets/photos/hero-headshot.jpg';
 import { getImage } from 'astro:assets';
+import interTight from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
+import inter from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -44,6 +46,8 @@ const jsonLd = {
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#20242B" />
     <meta name="author" content="Hector Maytorena Abreu" />
+    <link rel="preload" href={interTight} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={inter} as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 

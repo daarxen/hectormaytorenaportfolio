@@ -6,6 +6,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://hectormaytorena.com',
   integrations: [sitemap()],
+  build: {
+    // The CSS is small: inline it so it never blocks first paint.
+    inlineStylesheets: 'always',
+  },
   image: {
     responsiveStyles: true,
   },

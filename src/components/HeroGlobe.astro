@@ -25,7 +25,7 @@ import { spline } from '../data/site';
   async function boot() {
     if (!root || !canvas || !url) return;
     const { Application } = await import('@splinetool/runtime');
-    const app = new Application(canvas, { renderMode: 'continuous' });
+    const app = new Application(canvas, { renderMode: 'continuous', renderer: 'webgl' });
     await app.load(url);
     root.classList.add('ready');
 
@@ -34,7 +34,11 @@ import { spline } from '../data/site';
     const orbits = [app.findObjectByName('Orbit Spin 1'), app.findObjectByName('Orbit Spin 2')];
     const deg = Math.PI / 180;
     let visible = true;
-    new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(root);
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible && app.isStopped) app.play();
+      else if (!visible && !app.isStopped) app.stop();
+    }).observe(root);
 
     const tick = (now: number) => {
       if (visible) {
@@ -51,26 +55,42 @@ import { spline } from '../data/site';
   }
 
   if (root && wants3D()) {
-    // Wait until the browser is idle so the globe never competes with the hero's first paint.
+    // Start ~3 s after the page has fully loaded, then wait for an idle moment, so
+    // the 3D setup never competes with the first paint or the visitor's first clicks.
     const start = () => boot().catch(() => root.classList.remove('ready'));
-    if ('requestIdleCallback' in window) (window as any).requestIdleCallback(start, { timeout: 2500 });
-    else setTimeout(start, 1200);
+    const idle = () =>
+      'requestIdleCallback' in window ? (window as any).requestIdleCallback(start, { timeout: 2000 }) : start();
+    const kick = () => setTimeout(idle, 3000);
+    if (document.readyState === 'complete') kick();
+    else window.addEventListener('load', kick, { once: true });
   }
 </script>
 
 <style>
+  /* Anchored to the hero's bottom-right so Spline's "Built with Spline" badge
+     (drawn in the canvas's bottom-right corner) always stays visible and sharp. */
   .hero-globe {
     position: absolute; z-index: -1; pointer-events: none;
     width: min(1150px, 90vw); aspect-ratio: 1;
-    right: 2%; top: 56%; translate: 0 -50%;
-    -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
-    mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+    right: 0; bottom: 0;
+    /* fade only the top and left edges */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28%), linear-gradient(to bottom, transparent 0, #000 30%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 0, #000 28%), linear-gradient(to bottom, transparent 0, #000 30%);
+    mask-composite: intersect;
   }
   .hero-globe canvas {
     width: 100%; height: 100%; display: block;
-    opacity: 0; filter: blur(2.5px) saturate(1.15);
-    transition: opacity 1.6s var(--ease);
+    opacity: 0; transition: opacity 1.6s var(--ease);
   }
-  .hero-globe.ready canvas { opacity: 0.9; }
-  @media (max-width: 999px) { .hero-globe { right: -35%; top: 30%; width: 120vw; } }
+  .hero-globe.ready canvas { opacity: 1; }
+  /* frosted layer over the globe (only once it has loaded), stopping short of the badge strip */
+  .hero-globe.ready::after {
+    content: ''; position: absolute; inset: 0 0 76px 0;
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent);
+    mask-image: linear-gradient(to bottom, #000 88%, transparent);
+  }
+  /* phones never load the globe: skip the layer entirely */
+  @media (max-width: 767px) { .hero-globe { display: none; } }
 </style>

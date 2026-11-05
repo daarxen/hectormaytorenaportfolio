@@ -67,7 +67,7 @@ const recognition = [
 
       <figure class="grad reveal">
         <div class="frame">
-          <video class="ambient" src="/media/eller-greetings.mp4" poster="/media/eller-greetings-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Hector in a suit waving in front of the “Greetings from Eller College of Management” mural."></video>
+          <video class="ambient" data-src="/media/eller-greetings.mp4" poster="/media/eller-greetings-poster.webp" muted loop playsinline preload="none" aria-label="Hector in a suit waving in front of the “Greetings from Eller College of Management” mural."></video>
         </div>
         <figcaption>Greetings from the Eller College of Management.</figcaption>
       </figure>
@@ -90,7 +90,7 @@ const recognition = [
               <video
                 class="r-video"
                 src="/media/congressional-recognition.mp4"
-                poster="/media/congressional-recognition-poster.jpg"
+                poster="/media/congressional-recognition-poster.webp"
                 controls
                 muted
                 playsinline
@@ -123,7 +123,7 @@ const recognition = [
     .school:first-child::after {
       content: '→'; position: absolute; right: -1.05rem; top: 50%; translate: 0 -50%; z-index: 1;
       width: 2rem; height: 2rem; display: grid; place-items: center; border-radius: 50%;
-      background: var(--blue); color: #fff; font-size: 0.95rem;
+      background: var(--blue-fill); color: #fff; font-size: 0.95rem;
     }
   }
   .when { font: 600 0.75rem var(--font-display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); }

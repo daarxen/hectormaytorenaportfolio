@@ -73,7 +73,7 @@ const chapters: Chapter[] = [
     takeaway: 'Ambition becomes progress when there is a plan behind it.',
     video: {
       src: '/media/excel-analysis.mp4',
-      poster: '/media/excel-analysis-poster.jpg',
+      poster: '/media/excel-analysis-poster.webp',
       label: 'Hector working on a financial spreadsheet in Excel on his laptop.',
     },
     caption: 'Putting it into practice: analysis in Excel.',
@@ -132,7 +132,7 @@ const chapters: Chapter[] = [
             {c.video ? (
               <figure class="ch-media reveal">
                 <div class="frame">
-                  <video class="ambient" src={c.video.src} poster={c.video.poster} autoplay muted loop playsinline preload="metadata" aria-label={c.video.label}></video>
+                  <video class="ambient" data-src={c.video.src} poster={c.video.poster} muted loop playsinline preload="none" aria-label={c.video.label}></video>
                 </div>
                 {c.caption && <figcaption>{c.caption}</figcaption>}
               </figure>
