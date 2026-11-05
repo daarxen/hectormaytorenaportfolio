@@ -1,0 +1,42 @@
+---
+const interests = [
+  { t: 'Solo travel & blogging', d: 'Going somewhere new on my own and writing about what I find.' },
+  { t: 'Scuba diving', d: 'Calm under pressure, literally.' },
+  { t: 'International cuisine', d: 'One of the best ways to understand a culture.' },
+  { t: 'Photography', d: 'Paying attention to composition and detail.' },
+  { t: 'Journalism', d: 'Asking questions and telling stories clearly.' },
+];
+---
+<section class="section theme-light interests" aria-labelledby="int-title">
+  <div class="wrap int-grid">
+    <div>
+      <p class="eyebrow reveal">Beyond work</p>
+      <h2 id="int-title" class="int-title reveal" style="--d:.08s">
+        Curious about <span class="serif accent">different perspectives.</span>
+      </h2>
+      <p class="muted reveal" style="--d:.16s">
+        The interests that keep me open to new experiences, and that tend to come up in the best conversations.
+      </p>
+    </div>
+    <ul class="int-list">
+      {interests.map((i, n) => (
+        <li class="reveal" style={`--d:${n * 0.05}s`}>
+          <span class="i-t">{i.t}</span>
+          <span class="i-d">{i.d}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .interests { padding-block: clamp(4rem, 8vw, 6rem); }
+  .int-grid { display: grid; gap: 2.5rem; }
+  @media (min-width: 900px) { .int-grid { grid-template-columns: 0.9fr 1.1fr; gap: 5rem; align-items: start; } }
+  .int-title { font-size: var(--step-3); margin: 1rem 0; }
+  .int-list { list-style: none; border-top: 1px solid var(--line); }
+  .int-list li { display: grid; gap: 0.25rem 2rem; padding: 1.1rem 0; border-bottom: 1px solid var(--line); }
+  @media (min-width: 600px) { .int-list li { grid-template-columns: 14rem 1fr; align-items: baseline; } }
+  .i-t { font: 650 1.1rem var(--font-display); }
+  .i-d { color: var(--fg-muted); }
+</style>

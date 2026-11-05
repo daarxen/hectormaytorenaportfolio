@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/site';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ogDefault from '../assets/photos/hero-portrait.jpg';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  title?: string;
+  description?: string;
+  homeNav?: boolean;
+}
+const { title, description = profile.description, homeNav = false } = Astro.props;
+const fullTitle = title ? `${title} — ${profile.shortName}` : `${profile.shortName} — ${profile.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = await getImage({ src: ogDefault, width: 600, format: 'jpg' });
+const ogUrl = new URL(og.src, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Hector Maytorena Abreu',
+  alternateName: profile.name,
+  url: Astro.site?.toString(),
+  email: `mailto:${profile.email}`,
+  jobTitle: 'Finance Student',
+  description: profile.description,
+  sameAs: [profile.linkedin],
+  knowsLanguage: ['English', 'Spanish'],
+  alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'Pima Community College' }],
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'University of Arizona, Eller College of Management' },
+  knowsAbout: profile.interests,
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#20242B" />
+    <meta name="author" content="Hector Maytorena Abreu" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="profile:first_name" content="Hector" />
+    <meta property="profile:last_name" content="Maytorena Abreu" />
+    <meta name="twitter:card" content="summary" />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav home={homeNav} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/interactions.ts';
+    </script>
+  </body>
+</html>

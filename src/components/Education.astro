@@ -1,0 +1,165 @@
+---
+import { Picture } from 'astro:assets';
+import graduation from '../assets/photos/graduation-2026.jpg';
+
+const schools = [
+  {
+    when: 'Graduated May 2026',
+    name: 'Pima Community College',
+    degree: 'Associate of Business Administration',
+    detail: 'The foundation: business administration fundamentals, earned while working.',
+  },
+  {
+    when: 'Expected December 2027',
+    name: 'University of Arizona',
+    sub: 'Eller College of Management',
+    degree: 'Bachelor of Science in Business Administration, Finance',
+    detail: 'GPA 3.9',
+    now: true,
+  },
+];
+
+const recognition = [
+  {
+    title: 'First Place, 2026 ACE Case Competition',
+    by: 'Arizona Community College Excellence · Eller College of Management',
+    date: 'April 10, 2026',
+    href: '/work/ace-case-competition/',
+  },
+  {
+    title: 'Certificate of Special Congressional Recognition',
+    by: 'U.S. House of Representatives, Arizona’s Sixth Congressional District',
+    date: 'May 7, 2026',
+    note: 'In recognition of dedication to academic success and continued perseverance in pursuit of my goals.',
+    video: true,
+  },
+  {
+    title: 'Eller Economic Development Program',
+    by: 'Business Certificate Program · Eller College of Management',
+  },
+];
+---
+<section id="education" class="section theme-light edu" aria-labelledby="edu-title">
+  <div class="wrap">
+    <header class="section-head split">
+      <div>
+        <p class="eyebrow reveal">Education &amp; recognition</p>
+        <h2 id="edu-title" class="section-title reveal" style="--d:.08s">
+          A foundation, <span class="serif accent">then a next step.</span>
+        </h2>
+      </div>
+      <p class="lede reveal" style="--d:.16s">
+        From Pima Community College to the Eller College of Management. Each step built on the last, and all of it
+        happened alongside work.
+      </p>
+    </header>
+
+    <div class="edu-grid">
+      <ol class="path">
+        {schools.map((s) => (
+          <li class:list={['school reveal', { now: s.now }]}>
+            <p class="when">{s.when}</p>
+            <h3>{s.name}</h3>
+            {s.sub && <p class="sub">{s.sub}</p>}
+            <p class="degree">{s.degree}</p>
+            <p class="detail">{s.detail}</p>
+          </li>
+        ))}
+      </ol>
+
+      <figure class="grad reveal">
+        <div class="frame">
+          <Picture
+            src={graduation}
+            formats={['avif', 'webp']}
+            widths={[400, 700]}
+            sizes="(min-width: 1000px) 340px, 90vw"
+            alt="Hector holding an open certificate folder in front of gold “26” balloons and a “Congrats Grad” sign."
+          />
+        </div>
+        <figcaption>Celebrating the Class of 2026.</figcaption>
+      </figure>
+    </div>
+
+    <div class="recog">
+      <h3 class="recog-title reveal">Recognition</h3>
+      <ul>
+        {recognition.map((r) => (
+          <li class="reveal">
+            <div class="r-main">
+              <p class="r-title">
+                {r.href ? <a href={r.href}>{r.title}</a> : r.title}
+              </p>
+              <p class="r-by">{r.by}</p>
+              {r.note && <p class="r-note">{r.note}</p>}
+            </div>
+            {r.date && <p class="r-date">{r.date}</p>}
+            {r.video && (
+              <video
+                class="r-video"
+                src="/media/congressional-recognition.mp4"
+                poster="/media/congressional-recognition-poster.png"
+                controls
+                muted
+                playsinline
+                preload="none"
+                aria-label="Short video of the Certificate of Special Congressional Recognition presented to Hector Maytorena Abreu, May 7, 2026."
+              ></video>
+            )}
+          </li>
+        ))}
+      </ul>
+      <p class="disclaimer reveal">
+        This is a personal website. It is not sponsored or endorsed by the University of Arizona, the Eller College of
+        Management, or Pima Community College.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .edu-grid { display: grid; gap: 2.5rem; align-items: start; }
+  @media (min-width: 1000px) { .edu-grid { grid-template-columns: 1fr 340px; gap: 4rem; } }
+  .path { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem; }
+  @media (min-width: 700px) { .path { grid-template-columns: 1fr 1fr; } }
+  .school {
+    position: relative; padding: 2rem; border-radius: 18px; background: var(--paper); border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .school.now { background: var(--graphite); color: var(--offwhite); border-color: var(--graphite); }
+  @media (min-width: 700px) {
+    .school:first-child::after {
+      content: '→'; position: absolute; right: -1.05rem; top: 50%; translate: 0 -50%; z-index: 1;
+      width: 2rem; height: 2rem; display: grid; place-items: center; border-radius: 50%;
+      background: var(--blue); color: #fff; font-size: 0.95rem;
+    }
+  }
+  .when { font: 600 0.75rem var(--font-display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); }
+  .now .when { color: var(--blue-glow); }
+  .school h3 { font-size: var(--step-2); margin-top: 0.75rem; }
+  .sub { font-weight: 600; color: var(--fg-accent); }
+  .now .sub { color: var(--blue-glow); }
+  .degree { margin-top: 0.75rem; font-weight: 500; }
+  .detail { color: var(--fg-muted); font-size: 0.95rem; }
+  .now .detail { color: var(--offwhite); font: 650 1.5rem var(--font-display); margin-top: auto; padding-top: 1.25rem; }
+
+  .grad { margin: 0; max-width: 340px; }
+  .grad .frame { aspect-ratio: 3 / 4; }
+  .grad figcaption { margin-top: 0.75rem; font-size: 0.85rem; color: var(--fg-muted); }
+
+  .recog { margin-top: clamp(3.5rem, 7vw, 5rem); }
+  .recog-title { font-size: var(--step-1); margin-bottom: 1rem; }
+  .recog ul { list-style: none; border-top: 1px solid var(--line); }
+  .recog li {
+    display: grid; gap: 0.5rem 2rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 760px) { .recog li { grid-template-columns: 1fr auto; } }
+  .r-title { font: 600 1.15rem var(--font-display); }
+  .r-title a { text-decoration-color: rgba(29, 95, 216, 0.4); text-underline-offset: 4px; }
+  .r-title a:hover { color: var(--blue-ink); }
+  .r-by { color: var(--fg-muted); font-size: 0.92rem; }
+  .r-note { margin-top: 0.4rem; font-size: 0.92rem; max-width: 60ch; }
+  .r-date { font: 600 0.9rem var(--font-display); color: var(--fg-muted); }
+  .r-video { width: 180px; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 12px; background: var(--graphite); grid-column: 1 / -1; }
+  .disclaimer { margin-top: 1.5rem; font-size: 0.8rem; color: var(--fg-muted); }
+</style>

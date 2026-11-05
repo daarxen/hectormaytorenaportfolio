@@ -1,0 +1,98 @@
+---
+import { Picture } from 'astro:assets';
+import photo from '../assets/photos/recognition-3.jpg';
+
+const facts = [
+  { k: 'Studying', v: 'B.S.B.A. Finance, University of Arizona — Eller College of Management' },
+  { k: 'Previously', v: 'Associate of Business Administration, Pima Community College' },
+  { k: 'Focus', v: 'Corporate finance · FP&A · Financial planning · Business strategy' },
+  { k: 'Languages', v: 'English and Spanish (fluent)' },
+];
+---
+<section id="about" class="section theme-light" aria-labelledby="about-title">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="lead-col">
+        <p class="eyebrow reveal">About me</p>
+        <h2 id="about-title" class="statement reveal" style="--d:.08s">
+          An emerging finance professional with an <span class="serif accent">entrepreneurial mindset</span>, a broad
+          understanding of business, and a passion for turning ideas into action.
+        </h2>
+        <p class="lede reveal" style="--d:.16s">
+          I approach challenges with curiosity, collaborate with different people, and continuously look for opportunities
+          to learn, contribute, and grow.
+        </p>
+
+        <figure class="photo reveal" style="--d:.1s">
+          <div class="frame">
+            <Picture
+              src={photo}
+              formats={['avif', 'webp']}
+              widths={[480, 800]}
+              sizes="(min-width: 900px) 420px, 90vw"
+              alt="Hector smiling and holding a certificate, standing beside a colleague in front of a black-and-white mural."
+            />
+          </div>
+          <figcaption>Receiving a certificate of recognition.</figcaption>
+        </figure>
+      </div>
+
+      <div class="body-col">
+        <div class="bio">
+          <p class="reveal">
+            Finance is my direction, but my understanding of business comes from many places. I’ve solved shipping problems
+            in an Amazon fulfillment center, led a front-of-house team, hosted open houses for licensed realtors, and
+            worked through high-volume rushes alongside kitchen and support staff. Each environment taught me something
+            different about how businesses actually run, and about the people who make them work.
+          </p>
+          <p class="reveal">
+            I earned my Associate of Business Administration at Pima Community College and now study Finance at the
+            University of Arizona’s Eller College of Management. I’m especially interested in corporate finance, FP&amp;A,
+            and business strategy: understanding decisions, evaluating opportunities, and allocating resources well.
+          </p>
+          <p class="reveal">
+            Beyond the numbers, I enjoy collaboration, public speaking, and networking, and exchanging ideas with people who
+            see things differently than I do. I’m curious about entrepreneurship, travel, and new perspectives, and I’m
+            always looking for the next thing to learn.
+          </p>
+        </div>
+
+        <dl class="facts reveal">
+          {facts.map((f) => (
+            <div>
+              <dt>{f.k}</dt>
+              <dd>{f.v}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <a class="link-arrow reveal" href="#evolution">
+          Read how I got here
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid { display: grid; gap: clamp(3rem, 6vw, 6rem); }
+  @media (min-width: 900px) { .about-grid { grid-template-columns: 1.05fr 1fr; } }
+  .statement { font-size: var(--step-3); font-weight: 600; line-height: 1.12; margin: 1.25rem 0 1.5rem; max-width: 22ch; }
+  .statement .serif { font-size: 1.08em; }
+  .photo { margin: clamp(2.5rem, 5vw, 3.5rem) 0 0; max-width: 420px; }
+  .photo .frame { aspect-ratio: 4 / 5; }
+  .photo :global(img) { object-position: 70% 35%; }
+  figcaption { margin-top: 0.75rem; font-size: 0.85rem; color: var(--fg-muted); }
+
+  .body-col { display: flex; flex-direction: column; gap: 2.5rem; }
+  @media (min-width: 900px) { .body-col { padding-top: 3.25rem; } }
+  .bio { display: grid; gap: 1.25rem; font-size: 1.075rem; line-height: 1.75; }
+  .bio p:first-child::first-line { font-weight: 600; }
+
+  .facts { margin: 0; border-top: 1px solid var(--line); }
+  .facts div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .facts dt { font: 600 0.78rem var(--font-display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); padding-top: 0.2rem; }
+  .facts dd { margin: 0; font-weight: 500; }
+  @media (max-width: 520px) { .facts div { grid-template-columns: 1fr; gap: 0.25rem; } }
+</style>

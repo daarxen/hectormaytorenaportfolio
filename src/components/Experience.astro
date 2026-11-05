@@ -1,0 +1,85 @@
+---
+import { experience } from '../data/experience';
+
+const themes = [
+  { k: 'Operations', v: 'Amazon problem-solving' },
+  { k: 'Leadership', v: 'Shift leadership & training' },
+  { k: 'Marketing', v: 'Real estate content & MLS' },
+  { k: 'Customer', v: 'High-volume service' },
+];
+---
+<section id="experience" class="section theme-light" aria-labelledby="exp-title">
+  <div class="wrap">
+    <header class="section-head split">
+      <div>
+        <p class="eyebrow reveal">Experience</p>
+        <h2 id="exp-title" class="section-title reveal" style="--d:.08s">
+          Business, learned <span class="serif accent">beyond the classroom.</span>
+        </h2>
+      </div>
+      <div class="reveal" style="--d:.16s">
+        <p class="lede">
+          Operations, leadership, marketing and customer experience. Different environments that each taught me how a
+          business works from the inside.
+        </p>
+        <ul class="themes" aria-label="Areas of experience">
+          {themes.map((t) => <li><strong>{t.k}</strong><span>{t.v}</span></li>)}
+        </ul>
+      </div>
+    </header>
+
+    <ol class="timeline">
+      {experience.map((r) => (
+        <li class="role reveal">
+          <div class="when">
+            <span class="dates">{r.start} — {r.end}</span>
+            {r.current && <span class="current">Current</span>}
+          </div>
+          <div class="what">
+            <h3>{r.title}</h3>
+            <p class="org">{r.org}</p>
+            <p class="lens">{r.lens}</p>
+            <ul class="points">
+              {r.points.map((p) => <li>{p}</li>)}
+            </ul>
+            <ul class="tags" aria-label="Skills demonstrated">
+              {r.skills.map((s) => <li class="tag">{s}</li>)}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .themes { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1.5rem; margin-top: 1.75rem; }
+  .themes li { display: grid; padding-top: 0.75rem; border-top: 2px solid var(--graphite); }
+  .themes strong { font: 650 1rem var(--font-display); }
+  .themes span { font-size: 0.85rem; color: var(--fg-muted); }
+
+  .timeline { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+  .role {
+    display: grid; gap: 1rem 3rem; padding: clamp(2rem, 4vw, 3rem) 0; border-bottom: 1px solid var(--line);
+    position: relative; transition: background 0.3s var(--ease);
+  }
+  @media (min-width: 860px) { .role { grid-template-columns: 220px 1fr; } }
+  .role::before {
+    content: ''; position: absolute; left: 0; top: -1px; height: 2px; width: 0; background: var(--blue);
+    transition: width 0.6s var(--ease);
+  }
+  .role:hover::before { width: 100%; }
+
+  .when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; align-self: start; }
+  .dates { font: 600 0.9rem var(--font-display); color: var(--fg-muted); letter-spacing: 0.01em; }
+  .current {
+    font: 600 0.7rem var(--font-display); letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.25rem 0.55rem; border-radius: 999px; background: rgba(52, 120, 246, 0.1); color: var(--blue-ink);
+  }
+  .what h3 { font-size: var(--step-2); }
+  .org { margin-top: 0.4rem; font-weight: 600; color: var(--fg-accent); }
+  .lens { margin-top: 1rem; font: 500 1.05rem var(--font-display); }
+  .points { list-style: none; display: grid; gap: 0.5rem; margin: 1rem 0 1.5rem; max-width: 64ch; color: #3d4450; }
+  .points li { position: relative; padding-left: 1.4rem; }
+  .points li::before { content: ''; position: absolute; left: 0; top: 0.75em; width: 0.6rem; height: 1px; background: var(--steel); }
+</style>

@@ -1,0 +1,25 @@
+---
+import { profile } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap f-inner">
+    <p class="f-tag">{profile.tagline}</p>
+    <div class="f-links">
+      <a href={`mailto:${profile.email}`}>Email</a>
+      <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      <a href="/#resume">Résumé</a>
+    </div>
+    <p class="f-copy">© {year} Hector Maytorena Abreu. Personal website; not affiliated with or endorsed by any institution mentioned.</p>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--graphite-deep); color: #9aa4b1; border-top: 1px solid var(--line-dark); padding: 2.5rem 0; font-size: 0.85rem; }
+  .f-inner { display: grid; gap: 1rem; }
+  @media (min-width: 860px) { .f-inner { grid-template-columns: 1fr auto; } .f-copy { grid-column: 1 / -1; } }
+  .f-tag { font: 600 1rem var(--font-display); color: var(--offwhite); }
+  .f-links { display: flex; gap: 1.5rem; }
+  .f-links a { text-decoration: none; color: #c6cdd6; }
+  .f-links a:hover { color: #fff; }
+</style>

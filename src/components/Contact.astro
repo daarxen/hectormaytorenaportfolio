@@ -1,0 +1,53 @@
+---
+import Icon from './Icon.astro';
+import { profile } from '../data/site';
+---
+<section id="contact" class="section theme-dark theme-deep contact" aria-labelledby="contact-title">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow reveal">Contact</p>
+    <h2 id="contact-title" class="c-title reveal" style="--d:.08s">
+      Let’s build <span class="serif accent">something meaningful.</span>
+    </h2>
+    <p class="lede reveal" style="--d:.16s">
+      Interested in connecting, exchanging ideas, or discussing opportunities? I’d be glad to hear from you.
+    </p>
+
+    <div class="channels">
+      <a class="channel reveal" href={`mailto:${profile.email}`}>
+        <Icon name="mail" class="ch-icon" />
+        <span class="ch-k">Email</span>
+        <span class="ch-v">{profile.email}</span>
+        <Icon name="arrow-up-right" class="ch-go" />
+      </a>
+      <a class="channel reveal" style="--d:.08s" href={profile.linkedin} target="_blank" rel="noopener">
+        <Icon name="linkedin" class="ch-icon" />
+        <span class="ch-k">LinkedIn</span>
+        <span class="ch-v">Hector Maytorena Abreu</span>
+        <Icon name="arrow-up-right" class="ch-go" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact { position: relative; overflow: hidden; isolation: isolate; padding-block: clamp(6rem, 13vw, 10rem); }
+  .glow {
+    position: absolute; z-index: -1; width: 80vw; height: 80vw; left: -30vw; bottom: -50vw;
+    background: radial-gradient(closest-side, rgba(52, 120, 246, 0.25), transparent 70%);
+  }
+  .c-title { font-size: var(--step-5); letter-spacing: -0.035em; margin: 1.25rem 0 1.5rem; max-width: 14ch; line-height: 1; }
+  .channels { display: grid; gap: 1rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  @media (min-width: 760px) { .channels { grid-template-columns: 1fr 1fr; } }
+  .channel {
+    position: relative; display: grid; gap: 0.3rem; padding: 1.75rem; border-radius: 18px; text-decoration: none;
+    border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.03);
+    transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+  }
+  .channel:hover { border-color: var(--blue); background: rgba(52, 120, 246, 0.08); }
+  .channel :global(.ch-icon) { width: 28px; height: 28px; color: var(--blue-glow); margin-bottom: 1.25rem; }
+  .ch-k { font: 600 0.75rem var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel); }
+  .ch-v { font: 600 clamp(1.1rem, 2.4vw, 1.5rem) var(--font-display); letter-spacing: -0.01em; overflow-wrap: anywhere; }
+  .channel :global(.ch-go) { position: absolute; right: 1.5rem; top: 1.5rem; width: 22px; transition: transform 0.3s var(--ease); }
+  .channel:hover :global(.ch-go) { transform: translate(3px, -3px); }
+</style>

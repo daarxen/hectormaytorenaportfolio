@@ -1,0 +1,116 @@
+---
+import { nav, profile } from '../data/site';
+import Icon from './Icon.astro';
+interface Props { home?: boolean }
+const { home = false } = Astro.props;
+const href = (id: string) => (home ? `#${id}` : `/#${id}`);
+---
+<header class="nav" data-nav>
+  <div class="nav-inner wrap">
+    <a class="brand" href={home ? '#home' : '/'} aria-label={`${profile.shortName} — home`}>
+      <span class="mono" aria-hidden="true">HM</span>
+      <span class="brand-name">Hector Maytorena</span>
+    </a>
+
+    <nav aria-label="Primary" class="nav-links">
+      <ul>
+        {nav.slice(1).map((n) => (
+          <li><a href={href(n.id)} data-spy={n.id}>{n.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="nav-cta" href={`mailto:${profile.email}`}>Let’s talk</a>
+
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-btn>
+      <span class="sr-only">Menu</span>
+      <Icon name="menu" class="i-open" />
+      <Icon name="close" class="i-close" />
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu" data-menu hidden>
+    <nav aria-label="Mobile">
+      <ol>
+        {nav.map((n, i) => (
+          <li><a href={href(n.id)}><span>{String(i + 1).padStart(2, '0')}</span>{n.label}</a></li>
+        ))}
+      </ol>
+    </nav>
+    <div class="mobile-foot">
+      <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    color: var(--offwhite);
+    transition: background 0.35s var(--ease), border-color 0.35s var(--ease), transform 0.35s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(22, 25, 30, 0.78);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    border-color: var(--line-dark);
+  }
+  .nav.hide:not(.open) { transform: translateY(-100%); }
+  .nav-inner { height: var(--nav-h); display: flex; align-items: center; gap: 2rem; }
+
+  .brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; font-family: var(--font-display); }
+  .mono {
+    display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px;
+    font-weight: 700; font-size: 0.85rem; letter-spacing: 0.02em;
+    background: var(--blue); color: #fff;
+  }
+  .brand-name { font-weight: 600; letter-spacing: -0.01em; }
+
+  .nav-links { margin-left: auto; }
+  .nav-links ul { display: flex; gap: 0.25rem; list-style: none; }
+  .nav-links a {
+    display: block; padding: 0.5rem 0.75rem; border-radius: 999px;
+    font: 500 0.9rem var(--font-display); text-decoration: none; color: #c6cdd6;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-links a.active { color: #fff; background: rgba(255, 255, 255, 0.08); }
+  .nav-cta {
+    font: 600 0.9rem var(--font-display); text-decoration: none; color: #fff;
+    padding: 0.55rem 1rem; border-radius: 999px; background: var(--blue);
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: #5089f7; }
+
+  .menu-btn {
+    display: none; margin-left: auto; width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06); border: 1px solid var(--line-dark); color: inherit; cursor: pointer;
+    place-items: center;
+  }
+  .menu-btn :global(svg) { width: 22px; height: 22px; }
+  .menu-btn :global(.i-close), .nav.open .menu-btn :global(.i-open) { display: none; }
+  .nav.open .menu-btn :global(.i-close) { display: block; }
+
+  .mobile-menu {
+    position: fixed; inset: var(--nav-h) 0 0 0; background: var(--graphite-deep);
+    padding: 2rem var(--gutter); display: flex; flex-direction: column; justify-content: space-between;
+    overflow-y: auto;
+  }
+  .mobile-menu[hidden] { display: none; }
+  .mobile-menu ol { list-style: none; padding: 0; margin: 0; }
+  .mobile-menu li a {
+    display: flex; align-items: baseline; gap: 1rem; padding: 0.7rem 0;
+    font: 600 1.9rem/1.1 var(--font-display); letter-spacing: -0.02em; text-decoration: none;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .mobile-menu li span { font-size: 0.8rem; color: var(--blue-glow); font-weight: 500; }
+  .mobile-foot { display: grid; gap: 0.5rem; padding-top: 2rem; color: #b9c1cc; }
+
+  @media (max-width: 1080px) {
+    .nav-links, .nav-cta { display: none; }
+    .menu-btn { display: grid; }
+    .nav.open { background: var(--graphite-deep); }
+  }
+</style>

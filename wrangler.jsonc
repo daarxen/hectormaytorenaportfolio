@@ -1,0 +1,18 @@
+{
+  // Cloudflare Workers — static assets deployment for the Astro build output.
+  // Docs: https://developers.cloudflare.com/workers/static-assets/
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hector-maytorena-portfolio",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // Astro builds /work/<slug>/index.html → serve clean URLs with trailing slash.
+    "html_handling": "auto-trailing-slash",
+    // Serve the generated 404 page for unknown routes.
+    "not_found_handling": "404-page",
+  },
+  "routes": [
+    { "pattern": "hectormaytorena.com", "custom_domain": true },
+    { "pattern": "www.hectormaytorena.com", "custom_domain": true },
+  ],
+}

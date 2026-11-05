@@ -1,0 +1,157 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { projects, type Project } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { project: p, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+interface Props { project: Project; next: Project }
+const { project: p, next } = Astro.props;
+
+const steps = [
+  { k: 'Overview', body: p.overview },
+  { k: 'Challenge', body: p.challenge },
+  { k: 'My role', body: p.role },
+];
+---
+<Base title={p.title} description={p.summary}>
+  <article>
+    <header class="cs-hero theme-dark theme-deep">
+      <div class="wrap">
+        <a class="back" href="/#work"><Icon name="arrow-left" /> All projects</a>
+        <p class="eyebrow">{p.kicker}</p>
+        <h1>{p.title}</h1>
+        <p class="lede">{p.summary}</p>
+        <dl class="meta">
+          <div><dt>Format</dt><dd>{p.mode}</dd></div>
+          <div><dt>Skills</dt><dd>{p.skills.slice(0, 3).join(' · ')}</dd></div>
+        </dl>
+      </div>
+      {p.cover && (
+        <div class="wrap">
+          <div class="cs-cover frame">
+            <Picture
+              src={p.cover}
+              formats={['avif', 'webp']}
+              widths={[800, 1400, 2000]}
+              sizes="(min-width: 1240px) 1180px, 100vw"
+              alt={p.coverAlt ?? ''}
+              loading="eager"
+              style={`object-position:${p.coverPosition ?? 'center'}`}
+            />
+          </div>
+        </div>
+      )}
+    </header>
+
+    <div class="section theme-light cs-body">
+      <div class="wrap cs-grid">
+        <div class="cs-main">
+          {steps.map((s) => (
+            <section class="block reveal">
+              <h2>{s.k}</h2>
+              <p>{s.body}</p>
+            </section>
+          ))}
+
+          <section class="block reveal">
+            <h2>Actions</h2>
+            <ol class="list">
+              {p.actions.map((a) => <li>{a}</li>)}
+            </ol>
+          </section>
+
+          <section class="block results reveal">
+            <h2>Results</h2>
+            <ul class="list">
+              {p.results.map((r) => <li>{r}</li>)}
+            </ul>
+          </section>
+
+          {p.note && <p class="note reveal">{p.note}</p>}
+        </div>
+
+        <aside class="cs-side">
+          <div class="side-card">
+            <h2>Skills demonstrated</h2>
+            <ul class="tags">
+              {p.skills.map((s) => <li class="tag">{s}</li>)}
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      {p.evidence.length > 0 && (
+        <div class="wrap">
+          <section class="evidence">
+            <h2 class="reveal">Evidence</h2>
+            <div class="ev-grid">
+              {p.evidence.map((e) => (
+                <figure class="reveal">
+                  <div class="frame">
+                    <Picture src={e.image} formats={['avif', 'webp']} widths={[600, 1000]} sizes="(min-width: 800px) 50vw, 100vw" alt={e.alt} />
+                  </div>
+                  <figcaption>{e.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        </div>
+      )}
+    </div>
+
+    <nav class="next theme-dark" aria-label="Next project">
+      <a class="wrap" href={`/work/${next.slug}/`}>
+        <span class="n-k">Next project</span>
+        <span class="n-t">{next.title} <Icon name="arrow" /></span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .cs-hero { padding: calc(var(--nav-h) + 3rem) 0 clamp(3rem, 6vw, 5rem); color: var(--offwhite); }
+  .back { display: flex; width: fit-content; align-items: center; gap: 0.5rem; font: 500 0.9rem var(--font-display); color: #b9c1cc; text-decoration: none; margin-bottom: 2.5rem; }
+  .back :global(svg) { width: 1rem; }
+  .back:hover { color: #fff; }
+  h1 { font-size: var(--step-4); margin: 1.25rem 0 1.5rem; max-width: 20ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 1rem 3rem; margin: 2.5rem 0 0; }
+  .meta dt { font: 600 0.72rem var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel); }
+  .meta dd { margin: 0.25rem 0 0; font-weight: 500; }
+  .cs-cover { margin-top: clamp(2.5rem, 5vw, 4rem); aspect-ratio: 16 / 9; border-radius: 20px; }
+
+  .cs-grid { display: grid; gap: 3rem; }
+  @media (min-width: 960px) { .cs-grid { grid-template-columns: 1fr 320px; gap: 5rem; } }
+  .block { padding: 2rem 0; border-top: 1px solid var(--line); display: grid; gap: 1rem; }
+  @media (min-width: 700px) { .block { grid-template-columns: 11rem 1fr; gap: 2rem; } }
+  .block h2 { font: 600 0.78rem var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-accent); padding-top: 0.35rem; }
+  .block p { font-size: 1.1rem; line-height: 1.75; max-width: 62ch; }
+  .list { padding-left: 1.2rem; display: grid; gap: 0.6rem; font-size: 1.05rem; max-width: 62ch; }
+  .list li::marker { color: var(--blue-ink); font-weight: 600; }
+  .results .list { font-weight: 500; }
+  .note { margin-top: 1.5rem; padding: 1.1rem 1.25rem; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); font-size: 0.92rem; color: var(--fg-muted); }
+
+  .cs-side { position: relative; }
+  .side-card { position: sticky; top: calc(var(--nav-h) + 2rem); padding: 1.75rem; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
+  .side-card h2 { font-size: 1rem; margin-bottom: 1rem; }
+
+  .evidence { margin-top: clamp(3rem, 6vw, 5rem); }
+  .evidence > h2 { font-size: var(--step-2); margin-bottom: 1.5rem; }
+  .ev-grid { display: grid; gap: 1.25rem; }
+  @media (min-width: 800px) { .ev-grid { grid-template-columns: 1fr 1fr; } }
+  .ev-grid figure { margin: 0; }
+  .ev-grid .frame { aspect-ratio: 4 / 3; }
+  .ev-grid figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: var(--fg-muted); }
+
+  .next a { display: grid; gap: 0.5rem; padding-block: clamp(3rem, 6vw, 5rem); text-decoration: none; }
+  .n-k { font: 600 0.75rem var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-glow); }
+  .n-t { display: inline-flex; align-items: center; gap: 0.75rem; font: 650 var(--step-3)/1.1 var(--font-display); letter-spacing: -0.025em; }
+  .n-t :global(svg) { width: 0.7em; transition: transform 0.3s var(--ease); }
+  .next a:hover .n-t :global(svg) { transform: translateX(6px); }
+</style>

@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { profile } from '../data/site';
+import { resumeAvailable, resumeHref } from '../lib/resume';
+---
+<Base title="Résumé" description="Résumé of Hector Maytorena Abreu, Finance student at the University of Arizona’s Eller College of Management.">
+  <section class="r-page theme-dark theme-deep">
+    <div class="wrap">
+      <a class="back" href="/#resume"><Icon name="arrow-left" /> Back to site</a>
+      <div class="r-head">
+        <div>
+          <p class="eyebrow">Résumé</p>
+          <h1>Hector E. Maytorena Abreu</h1>
+        </div>
+        <div class="r-actions">
+          {resumeAvailable ? (
+            <>
+              <a class="btn btn-primary" href={resumeHref} download><Icon name="download" /> Download PDF</a>
+              <a class="btn btn-ghost" href={resumeHref} target="_blank" rel="noopener">Open in new tab</a>
+            </>
+          ) : (
+            <a class="btn btn-primary" href={`mailto:${profile.email}?subject=R%C3%A9sum%C3%A9%20request`}>Request by email</a>
+          )}
+        </div>
+      </div>
+
+      {resumeAvailable ? (
+        <object class="viewer" data={`${resumeHref}#view=FitH`} type="application/pdf" aria-label="Résumé PDF preview">
+          <p class="fallback">
+            Your browser can’t display the PDF inline. <a href={resumeHref} download>Download the résumé</a> instead.
+          </p>
+        </object>
+      ) : (
+        <p class="fallback">The PDF résumé will be posted here soon. In the meantime, email me for a copy.</p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .r-page { min-height: 100svh; padding: calc(var(--nav-h) + 3rem) 0 4rem; color: var(--offwhite); }
+  .back { display: inline-flex; align-items: center; gap: 0.5rem; font: 500 0.9rem var(--font-display); color: #b9c1cc; text-decoration: none; }
+  .back :global(svg) { width: 1rem; }
+  .r-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin: 2.5rem 0 2rem; }
+  h1 { font-size: var(--step-3); margin-top: 1rem; }
+  .r-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+  .viewer { width: 100%; height: min(1100px, 85vh); border-radius: 14px; background: #fff; border: 1px solid var(--line-dark); }
+  .fallback { padding: 2rem; border-radius: 14px; border: 1px dashed var(--line-dark); color: #c9d0d9; }
+  .fallback a { color: var(--blue-glow); }
+  @media (max-width: 700px) { .viewer { height: 70vh; } }
+</style>

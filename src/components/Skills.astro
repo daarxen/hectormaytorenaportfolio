@@ -1,0 +1,95 @@
+---
+const groups = [
+  {
+    n: '01',
+    title: 'Finance & Business',
+    items: ['Financial foundations', 'Business strategy', 'Analytical thinking', 'Problem-solving', 'Business communication'],
+  },
+  {
+    n: '02',
+    title: 'Technical',
+    items: ['Microsoft Excel', 'Microsoft PowerPoint', 'Microsoft Word', 'MLS', 'Canva', 'CapCut', 'Social media advertising'],
+  },
+  {
+    n: '03',
+    title: 'Communication & Collaboration',
+    items: ['English & Spanish (fluent)', 'Public speaking', 'Networking', 'Team collaboration', 'Customer communication'],
+  },
+];
+
+const principles = [
+  { k: 'Listen', v: 'Every person brings a different perspective, experience and strength.' },
+  { k: 'Exchange', v: 'Encourage ideas to move freely so the best one wins, not the loudest.' },
+  { k: 'Recognize', v: 'See what people do well and put those strengths to work.' },
+  { k: 'Act', v: 'Turn collective thinking into a plan, and the plan into results.' },
+];
+---
+<section id="skills" class="section theme-dark theme-deep" aria-labelledby="skills-title">
+  <div class="wrap">
+    <header class="section-head split">
+      <div>
+        <p class="eyebrow reveal">Skills &amp; leadership</p>
+        <h2 id="skills-title" class="section-title reveal" style="--d:.08s">
+          Better ideas. Stronger teams. <span class="serif accent">Meaningful results.</span>
+        </h2>
+      </div>
+      <p class="lede reveal" style="--d:.16s">
+        The tools I work with, and the way I work with people. I enjoy sharing ideas, presenting and supporting a team,
+        and I’m comfortable stepping into leadership when it’s needed.
+      </p>
+    </header>
+
+    <div class="groups">
+      {groups.map((g, i) => (
+        <div class="group reveal" style={`--d:${i * 0.08}s`}>
+          <p class="g-n">{g.n}</p>
+          <h3>{g.title}</h3>
+          <ul>
+            {g.items.map((it) => <li>{it}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="leadership">
+      <blockquote class="reveal">
+        <p>
+          “I believe the best outcomes come from collaboration. Every person brings a different perspective, experience,
+          and strength to the table. My approach is to listen, encourage the exchange of ideas, recognize people’s
+          abilities, and help transform collective thinking into action.”
+        </p>
+        <footer>My approach to leadership</footer>
+      </blockquote>
+      <ol class="principles">
+        {principles.map((p, i) => (
+          <li class="reveal" style={`--d:${i * 0.06}s`}>
+            <span class="p-k">{p.k}</span>
+            <span class="p-v">{p.v}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .groups { display: grid; gap: 1.25rem; }
+  @media (min-width: 900px) { .groups { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .group { padding: 2rem; border-radius: 18px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.02); }
+  .g-n { font: 600 0.8rem var(--font-display); color: var(--blue-glow); letter-spacing: 0.1em; }
+  .group h3 { font-size: var(--step-1); margin: 0.6rem 0 1.25rem; }
+  .group ul { list-style: none; display: grid; }
+  .group li { padding: 0.7rem 0; border-top: 1px solid var(--line-dark); color: #d5dae1; }
+
+  .leadership { display: grid; gap: 3rem; margin-top: clamp(4rem, 8vw, 6rem); align-items: start; }
+  @media (min-width: 1000px) { .leadership { grid-template-columns: 1.2fr 1fr; gap: 5rem; } }
+  blockquote { margin: 0; }
+  blockquote p { font: 400 var(--step-2)/1.35 var(--font-serif); font-style: italic; color: var(--offwhite); }
+  blockquote footer { margin-top: 1.25rem; font: 600 0.78rem var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-glow); }
+  .principles { list-style: none; padding: 0; margin: 0; counter-reset: p; }
+  .principles li { counter-increment: p; display: grid; grid-template-columns: 2.5rem 7rem 1fr; gap: 0.75rem; padding: 1.1rem 0; border-top: 1px solid var(--line-dark); align-items: baseline; }
+  .principles li::before { content: '0' counter(p); font: 600 0.8rem var(--font-display); color: var(--steel); }
+  .p-k { font: 650 1.1rem var(--font-display); }
+  .p-v { color: #b9c1cc; font-size: 0.95rem; }
+  @media (max-width: 520px) { .principles li { grid-template-columns: 2rem 1fr; } .p-v { grid-column: 2; } }
+</style>

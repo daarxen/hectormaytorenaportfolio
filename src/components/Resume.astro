@@ -1,0 +1,72 @@
+---
+import Icon from './Icon.astro';
+import { profile } from '../data/site';
+import { resumeAvailable, resumeHref } from '../lib/resume';
+---
+<section id="resume" class="section theme-light resume" aria-labelledby="resume-title">
+  <div class="wrap">
+    <div class="resume-card reveal">
+      <div class="r-copy">
+        <p class="eyebrow">Résumé</p>
+        <h2 id="resume-title" class="r-title">The one‑page version.</h2>
+        <p class="muted">
+          Experience, education and skills in a single document, ready to share with your team.
+        </p>
+        {resumeAvailable ? (
+          <div class="r-actions">
+            <a class="btn btn-primary" href="/resume/">View résumé <Icon name="arrow" /></a>
+            <a class="btn btn-ghost" href={resumeHref} download>
+              <Icon name="download" /> Download PDF
+            </a>
+          </div>
+        ) : (
+          <div class="r-actions">
+            <a class="btn btn-primary" href={`mailto:${profile.email}?subject=R%C3%A9sum%C3%A9%20request`}>
+              Request my résumé <Icon name="arrow" />
+            </a>
+          </div>
+        )}
+      </div>
+      <a class="r-doc" href={resumeAvailable ? '/resume/' : undefined} aria-hidden="true" tabindex="-1">
+        <div class="sheet">
+          <p class="s-name">Hector E. Maytorena Abreu</p>
+          <p class="s-role">Finance · Eller College of Management</p>
+          <span class="s-line w90"></span><span class="s-line w70"></span>
+          <p class="s-h">Experience</p>
+          <span class="s-line w95"></span><span class="s-line w80"></span><span class="s-line w85"></span>
+          <p class="s-h">Education</p>
+          <span class="s-line w75"></span><span class="s-line w60"></span>
+          <p class="s-h">Skills</p>
+          <span class="s-line w90"></span><span class="s-line w50"></span>
+          <Icon name="file" class="s-icon" />
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .resume { background: var(--paper); padding-block: clamp(4rem, 8vw, 6rem); }
+  .resume-card {
+    display: grid; gap: 2.5rem; align-items: center; padding: clamp(2rem, 5vw, 4rem); border-radius: 24px;
+    background: var(--offwhite); border: 1px solid var(--line); overflow: hidden;
+  }
+  @media (min-width: 860px) { .resume-card { grid-template-columns: 1.2fr 1fr; } }
+  .r-title { font-size: var(--step-4); margin: 1rem 0; }
+  .r-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 2rem; }
+  .resume .btn-ghost { --b-fg: var(--graphite); --b-line: #c9ced6; }
+
+  .r-doc { display: block; justify-self: center; width: min(300px, 80%); transition: transform 0.5s var(--ease); }
+  .r-doc[href]:hover { transform: rotate(-1deg) translateY(-6px); }
+  .sheet {
+    position: relative; aspect-ratio: 8.5 / 11; border-radius: 8px; padding: 1.75rem 1.5rem; background: var(--paper);
+    box-shadow: 0 30px 60px -25px rgba(32, 36, 43, 0.35), 0 0 0 1px var(--line); rotate: 3deg;
+    display: flex; flex-direction: column; gap: 0.45rem;
+  }
+  .s-name { font: 700 0.95rem var(--font-display); }
+  .s-role { font-size: 0.6rem; color: var(--blue-ink); margin-bottom: 0.5rem; }
+  .s-h { font: 700 0.55rem var(--font-display); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.75rem; }
+  .s-line { display: block; height: 5px; border-radius: 3px; background: #e7eaef; }
+  .w95 { width: 95%; } .w90 { width: 90%; } .w85 { width: 85%; } .w80 { width: 80%; } .w75 { width: 75%; } .w70 { width: 70%; } .w60 { width: 60%; } .w50 { width: 50%; }
+  .sheet :global(.s-icon) { position: absolute; right: 1rem; bottom: 1rem; width: 1.5rem; color: var(--blue); }
+</style>
