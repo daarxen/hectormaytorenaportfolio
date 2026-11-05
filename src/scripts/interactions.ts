@@ -2,13 +2,33 @@
 
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Ambient looping clips: never autoplay for reduced-motion users */
-if (reduce) {
-  document.querySelectorAll<HTMLVideoElement>('video.ambient').forEach((v) => {
-    v.pause();
-    v.removeAttribute('autoplay');
+/* Ambient looping clips: nothing downloads until a clip is near the viewport.
+   Phones, reduced-motion and data-saver visitors get the poster + tap-to-play. */
+const ambient = document.querySelectorAll<HTMLVideoElement>('video.ambient[data-src]');
+const manualVideo =
+  reduce || window.matchMedia('(max-width: 767px)').matches || !!(navigator as any).connection?.saveData;
+if (manualVideo || !('IntersectionObserver' in window)) {
+  ambient.forEach((v) => {
+    v.preload = 'none';
+    v.src = v.dataset.src!;
     v.controls = true;
   });
+} else {
+  const vio = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const v = e.target as HTMLVideoElement;
+        if (e.isIntersecting) {
+          if (!v.getAttribute('src')) v.src = v.dataset.src!;
+          v.play().catch(() => {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      }
+    },
+    { rootMargin: '200px 0px' },
+  );
+  ambient.forEach((v) => vio.observe(v));
 }
 
 /* Reveal on scroll */

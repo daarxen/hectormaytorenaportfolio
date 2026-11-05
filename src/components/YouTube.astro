@@ -3,7 +3,7 @@
  * Privacy-friendly, fast YouTube embed: shows a thumbnail and only loads the
  * player (youtube-nocookie.com) after the visitor clicks play.
  */
-interface Props { id: string; title: string; url: string; thumb?: 'maxresdefault' | 'hqdefault' }
+interface Props { id: string; title: string; url: string; thumb?: 'maxresdefault' | 'sddefault' | 'hqdefault' }
 const { id, title, url, thumb: quality = 'maxresdefault' } = Astro.props;
 const thumb = `https://i.ytimg.com/vi/${id}/${quality}.jpg`;
 ---

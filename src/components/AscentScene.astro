@@ -12,7 +12,7 @@
 import { spline } from '../data/site';
 ---
 <div class="ascent" data-ascent data-scene={spline.sceneUrl}>
-  <img class="poster" src="/media/ascent-poster.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async" />
+  <img class="poster" src="/media/ascent-poster.webp" alt="" width="800" height="1000" loading="lazy" decoding="async" />
   <canvas aria-hidden="true"></canvas>
   <p class="sr-only">Illustration: four ascending platforms, one per chapter, with a glowing marker on the chapter you are reading.</p>
 </div>
@@ -35,7 +35,7 @@ import { spline } from '../data/site';
   async function boot() {
     if (!root || !canvas || !url) return;
     const { Application } = await import('@splinetool/runtime');
-    const app = new Application(canvas, { renderMode: 'continuous' });
+    const app = new Application(canvas, { renderMode: 'continuous', renderer: 'webgl' });
     await app.load(url);
     root.classList.add('ready');
 
@@ -43,6 +43,14 @@ import { spline } from '../data/site';
     const rings = [1, 2, 3, 4].map((n) => app.findObjectByName(`Ring ${n}`));
     if (!marker) return;
     const base = { ...marker.position };
+
+    // Stop rendering entirely while the stage is off screen.
+    let visible = true;
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible && app.isStopped) app.play();
+      else if (!visible && !app.isStopped) app.stop();
+    }).observe(root);
 
     let from = 0;
     let to = 0;
@@ -70,6 +78,7 @@ import { spline } from '../data/site';
     };
 
     const tick = (now: number) => {
+      if (!visible) return void requestAnimationFrame(tick);
       const p = Math.min(1, (now - start) / DURATION);
       const f = from + (to - from) * ease(p);
       const o = pos(f);
