@@ -20,7 +20,13 @@ import { profile } from '../data/site';
         <span class="ch-v">{profile.email}</span>
         <Icon name="arrow-up-right" class="ch-go" />
       </a>
-      <a class="channel reveal" style="--d:.08s" href={profile.linkedin} target="_blank" rel="noopener">
+      <a class="channel reveal" style="--d:.08s" href={profile.whatsapp} target="_blank" rel="noopener">
+        <Icon name="whatsapp" class="ch-icon" />
+        <span class="ch-k">WhatsApp</span>
+        <span class="ch-v">{profile.phone}</span>
+        <Icon name="arrow-up-right" class="ch-go" />
+      </a>
+      <a class="channel reveal" style="--d:.16s" href={profile.linkedin} target="_blank" rel="noopener">
         <Icon name="linkedin" class="ch-icon" />
         <span class="ch-k">LinkedIn</span>
         <span class="ch-v">Hector Maytorena Abreu</span>
@@ -39,6 +45,7 @@ import { profile } from '../data/site';
   .c-title { font-size: var(--step-5); letter-spacing: -0.035em; margin: 1.25rem 0 1.5rem; max-width: 14ch; line-height: 1; }
   .channels { display: grid; gap: 1rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
   @media (min-width: 760px) { .channels { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1100px) { .channels { grid-template-columns: repeat(3, 1fr); } }
   .channel {
     position: relative; display: grid; gap: 0.3rem; padding: 1.75rem; border-radius: 18px; text-decoration: none;
     border: 1px solid var(--line-dark); background: rgba(255, 255, 255, 0.03);

@@ -2,6 +2,15 @@
 
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* Ambient looping clips: never autoplay for reduced-motion users */
+if (reduce) {
+  document.querySelectorAll<HTMLVideoElement>('video.ambient').forEach((v) => {
+    v.pause();
+    v.removeAttribute('autoplay');
+    v.controls = true;
+  });
+}
+
 /* Reveal on scroll */
 const revealEls = document.querySelectorAll<HTMLElement>('.reveal');
 if ('IntersectionObserver' in window && !reduce) {
@@ -88,6 +97,7 @@ if (chapters.length && railItems.length) {
           r.classList.toggle('current', i === idx);
           r.classList.toggle('done', i < idx);
         });
+        window.dispatchEvent(new CustomEvent('ascent:chapter', { detail: idx }));
       }
     },
     { rootMargin: '-40% 0px -55% 0px' },

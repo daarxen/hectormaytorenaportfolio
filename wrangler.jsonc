@@ -15,4 +15,12 @@
     { "pattern": "hectormaytorena.com", "custom_domain": true },
     { "pattern": "www.hectormaytorena.com", "custom_domain": true },
   ],
+  // Observavbility settings for Cloudflare Workers.
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "persist": true,
+    },
+  },
 }

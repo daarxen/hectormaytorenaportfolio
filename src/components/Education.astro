@@ -1,6 +1,4 @@
 ---
-import { Picture } from 'astro:assets';
-import graduation from '../assets/photos/graduation-2026.jpg';
 
 const schools = [
   {
@@ -69,15 +67,9 @@ const recognition = [
 
       <figure class="grad reveal">
         <div class="frame">
-          <Picture
-            src={graduation}
-            formats={['avif', 'webp']}
-            widths={[400, 700]}
-            sizes="(min-width: 1000px) 340px, 90vw"
-            alt="Hector holding an open certificate folder in front of gold “26” balloons and a “Congrats Grad” sign."
-          />
+          <video class="ambient" src="/media/eller-greetings.mp4" poster="/media/eller-greetings-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Hector in a suit waving in front of the “Greetings from Eller College of Management” mural."></video>
         </div>
-        <figcaption>Celebrating the Class of 2026.</figcaption>
+        <figcaption>Greetings from the Eller College of Management.</figcaption>
       </figure>
     </div>
 
@@ -98,7 +90,7 @@ const recognition = [
               <video
                 class="r-video"
                 src="/media/congressional-recognition.mp4"
-                poster="/media/congressional-recognition-poster.png"
+                poster="/media/congressional-recognition-poster.jpg"
                 controls
                 muted
                 playsinline
@@ -145,6 +137,7 @@ const recognition = [
 
   .grad { margin: 0; max-width: 340px; }
   .grad .frame { aspect-ratio: 3 / 4; }
+  .grad video { width: 100%; height: 100%; object-fit: cover; object-position: 48% 50%; }
   .grad figcaption { margin-top: 0.75rem; font-size: 0.85rem; color: var(--fg-muted); }
 
   .recog { margin-top: clamp(3.5rem, 7vw, 5rem); }

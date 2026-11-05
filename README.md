@@ -26,9 +26,12 @@ A static [Astro](https://astro.build) site deployed to **Cloudflare Workers** as
 | Education & recognition       | `src/components/Education.astro`        |
 | Skills, interests             | `src/components/Skills.astro`, `Interests.astro` |
 | Photos                        | `src/assets/photos/` (auto-optimized to AVIF/WebP) |
+| Intro video (YouTube), WhatsApp, phone | `src/data/site.ts` (`video`, `whatsapp`, `phone`) |
+| Work samples (Canva deck, flyer) | `sample` field on a project in `src/data/projects.ts` |
+| Short looping clips, résumé PDF | `public/media/`, `public/Hector-Maytorena-Abreu-Resume.pdf` |
 
-**Résumé:** add the PDF as `public/Hector-Maytorena-Abreu-Resume.pdf`. On the next build, every résumé
-button switches from “Request by email” to view/download, and `/resume/` embeds the PDF.
+**Résumé:** replace `public/Hector-Maytorena-Abreu-Resume.pdf` to update it (if the file is removed, résumé
+buttons fall back to “Request by email”).
 
 **Evolution photos:** chapters 1–2 render a typographic quote card. To use a photo instead, import it
 and set `image`, `alt` and `caption` on that chapter.

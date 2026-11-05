@@ -7,7 +7,9 @@ const year = new Date().getFullYear();
     <p class="f-tag">{profile.tagline}</p>
     <div class="f-links">
       <a href={`mailto:${profile.email}`}>Email</a>
+      <a href={profile.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
       <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      <a href={profile.video.url} target="_blank" rel="noopener">Video</a>
       <a href="/#resume">Résumé</a>
     </div>
     <p class="f-copy">© {year} Hector Maytorena Abreu. Personal website; not affiliated with or endorsed by any institution mentioned.</p>

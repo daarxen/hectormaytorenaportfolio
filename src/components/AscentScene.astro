@@ -1,0 +1,117 @@
+---
+/**
+ * "The Ascent" — Spline 3D scene for the My Evolution section.
+ * Four platforms (one per chapter) and a glowing marker that hops to the
+ * chapter currently in view. The scene is driven from the page (see script),
+ * loaded lazily, and replaced by a still poster on small screens, reduced
+ * motion, or data-saver connections.
+ *
+ * Spline file: “The Ascent”. Object names the script relies on:
+ *   Marker (group: orb + point light), Ring 1–4.
+ */
+import { spline } from '../data/site';
+---
+<div class="ascent" data-ascent data-scene={spline.sceneUrl}>
+  <img class="poster" src="/media/ascent-poster.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async" />
+  <canvas aria-hidden="true"></canvas>
+  <p class="sr-only">Illustration: four ascending platforms, one per chapter, with a glowing marker on the chapter you are reading.</p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-ascent]');
+  const url = root?.dataset.scene;
+  const canvas = root?.querySelector('canvas');
+
+  const wants3D = () =>
+    !!url &&
+    window.matchMedia('(min-width: 1000px)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !(navigator as any).connection?.saveData;
+
+  // Platform offsets relative to platform 1 (must match the Spline layout).
+  const OFFSETS = [0, 1, 2, 3].map((i) => ({ x: 320 * i, y: 120 * i + (i === 3 ? 34 : 0), z: -80 * i }));
+  const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  async function boot() {
+    if (!root || !canvas || !url) return;
+    const { Application } = await import('@splinetool/runtime');
+    const app = new Application(canvas, { renderMode: 'continuous' });
+    await app.load(url);
+    root.classList.add('ready');
+
+    const marker = app.findObjectByName('Marker');
+    const rings = [1, 2, 3, 4].map((n) => app.findObjectByName(`Ring ${n}`));
+    if (!marker) return;
+    const base = { ...marker.position };
+
+    let from = 0;
+    let to = 0;
+    let start = 0;
+    const DURATION = 950;
+
+    window.addEventListener('ascent:chapter', (e) => {
+      const next = (e as CustomEvent<number>).detail;
+      if (next === to) return;
+      const now = performance.now();
+      // Start from wherever the marker currently is (handles fast scrolling).
+      const p = Math.min(1, (now - start) / DURATION);
+      from = from + (to - from) * ease(p);
+      to = next;
+      start = now;
+    });
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const pos = (f: number) => {
+      const i = Math.max(0, Math.min(2, Math.floor(f)));
+      const t = f - i;
+      const A = OFFSETS[i];
+      const B = OFFSETS[Math.min(3, i + 1)];
+      return { x: lerp(A.x, B.x, t), y: lerp(A.y, B.y, t), z: lerp(A.z, B.z, t) };
+    };
+
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / DURATION);
+      const f = from + (to - from) * ease(p);
+      const o = pos(f);
+      const hop = Math.sin(Math.PI * p) * 70 * Math.min(1, Math.abs(to - from)); // arc while travelling
+      const bob = Math.sin(now / 650) * 6; // gentle idle float
+      marker.position.x = base.x + o.x;
+      marker.position.y = base.y + o.y + hop + bob;
+      marker.position.z = base.z + o.z;
+      rings.forEach((r, i) => {
+        if (!r) return;
+        const target = i === Math.round(f) ? 1.08 : 1;
+        const s = r.scale.x + (target - r.scale.x) * 0.12;
+        r.scale.x = s;
+        r.scale.y = s;
+      });
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  if (root && wants3D()) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          boot().catch(() => root.classList.remove('ready'));
+        }
+      },
+      { rootMargin: '600px 0px' },
+    );
+    io.observe(root);
+  }
+</script>
+
+<style>
+  .ascent {
+    position: relative; aspect-ratio: 4 / 5; width: 100%; overflow: hidden; border-radius: 18px;
+    background: var(--graphite); border: 1px solid var(--line-dark);
+  }
+  .poster, canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .poster { object-fit: cover; transition: opacity 0.6s var(--ease); }
+  canvas { opacity: 0; transition: opacity 0.8s var(--ease); }
+  .ascent.ready canvas { opacity: 1; }
+  .ascent.ready .poster { opacity: 0; }
+</style>

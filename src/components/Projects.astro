@@ -2,8 +2,12 @@
 import { Picture } from 'astro:assets';
 import { projects, upcoming } from '../data/projects';
 import Icon from './Icon.astro';
+import CanvaPresentation from './CanvaPresentation.astro';
+import YouTube from './YouTube.astro';
+import { resumeAvailable, resumeHref } from '../lib/resume';
 
 const [featured, ...rest] = projects;
+const samples = projects.filter((p) => p.sample).map((p) => ({ ...p.sample!, slug: p.slug, project: p.title }));
 ---
 <section id="work" class="section theme-dark" aria-labelledby="work-title">
   <div class="wrap">
@@ -86,6 +90,45 @@ const [featured, ...rest] = projects;
         </div>
       </li>
     </ul>
+
+    <div id="samples" class="samples">
+      <header class="samples-head">
+        <h3 class="reveal">Work samples</h3>
+        <p class="muted reveal">Real deliverables, viewable right here.</p>
+      </header>
+      <div class="samples-grid">
+        {samples.map((s, i) => (
+          <article class:list={['sample reveal', s.kind]} style={`--d:${i * 0.08}s`}>
+            <p class="kicker">Sample 0{i + 1} · {s.project}</p>
+            <h4>{s.title}</h4>
+            <p class="summary">{s.description}</p>
+            {s.kind === 'canva' && s.url && <CanvaPresentation url={s.url} title={s.title} credit={s.credit} />}
+            {s.kind === 'youtube' && s.videoId && s.url && (
+              <figure class="img-sample">
+                <YouTube id={s.videoId} title={s.title} url={s.url} thumb="hqdefault" />
+                <figcaption>{s.credit} · <a href={s.url} target="_blank" rel="noopener">Watch on YouTube ↗</a></figcaption>
+              </figure>
+            )}
+            {s.kind === 'image' && s.image && (
+              <figure class="img-sample">
+                <div class="frame">
+                  <Picture src={s.image} formats={['avif', 'webp']} widths={[400, 700]} sizes="(min-width: 1000px) 30vw, 90vw" alt={s.alt ?? ''} />
+                </div>
+                <figcaption>{s.credit}</figcaption>
+              </figure>
+            )}
+            <a class="link-arrow" href={`/work/${s.slug}/`}>See the full project <Icon name="arrow" /></a>
+          </article>
+        ))}
+      </div>
+      {resumeAvailable && (
+        <a class="resume-strip reveal" href={resumeHref} download>
+          <Icon name="file" />
+          <span><strong>Résumé (PDF)</strong> · One page: experience, education, skills</span>
+          <Icon name="download" />
+        </a>
+      )}
+    </div>
   </div>
 </section>
 
@@ -129,5 +172,26 @@ const [featured, ...rest] = projects;
   .c-body h3 { font-size: var(--step-1); }
   .c-body .summary { font-size: 0.95rem; }
   .mode { font-size: 0.82rem; color: var(--steel); margin-top: auto; padding-top: 0.5rem; }
+  .samples { margin-top: clamp(4rem, 8vw, 6rem); scroll-margin-top: calc(var(--nav-h) + 2rem); }
+  .samples-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 2rem; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--line-dark); }
+  .samples-head h3 { font-size: var(--step-3); }
+  .samples-grid { display: grid; gap: 1.25rem; align-items: start; }
+  @media (min-width: 1000px) { .samples-grid { grid-template-columns: 1.75fr 1fr; } }
+  .sample { display: flex; flex-direction: column; gap: 0.75rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: 18px; background: var(--graphite-soft); border: 1px solid var(--line-dark); }
+  .sample h4 { font-size: var(--step-1); }
+  .sample .summary { font-size: 0.95rem; }
+  .sample .link-arrow { margin-top: 0.5rem; }
+  .img-sample { margin: 0.5rem 0 0; }
+  .img-sample .frame { aspect-ratio: 1; border-radius: 12px; }
+  .img-sample figcaption a { color: var(--fg-accent); text-decoration: none; font-weight: 600; }
+  .img-sample figcaption { margin-top: 0.75rem; font-size: 0.85rem; color: var(--fg-muted); }
+  .resume-strip {
+    margin-top: 1.25rem; display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.5rem; border-radius: 14px;
+    text-decoration: none; border: 1px dashed rgba(165, 175, 188, 0.35); color: var(--fg-muted); transition: border-color 0.3s, color 0.3s;
+  }
+  .resume-strip:hover { border-color: var(--blue); color: var(--offwhite); }
+  .resume-strip strong { color: var(--offwhite); }
+  .resume-strip :global(svg) { width: 22px; flex: none; color: var(--blue-glow); }
+  .resume-strip :global(svg:last-child) { margin-left: auto; }
   .upcoming { background: transparent; border-style: dashed; justify-content: center; min-height: 220px; }
 </style>

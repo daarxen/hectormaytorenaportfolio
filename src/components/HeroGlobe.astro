@@ -1,0 +1,76 @@
+---
+/**
+ * Abstract Spline globe used as a blurred background layer inside the hero.
+ * Spline file: “Globe”. Objects the script drives:
+ *   Globe Spin (id c4b0b34b…, rotates on its axis), Orbit Spin 1 / Orbit Spin 2 (satellites).
+ * Desktop/tablet only; skipped for reduced motion, data-saver, or no scene URL.
+ */
+import { spline } from '../data/site';
+---
+<div class="hero-globe" aria-hidden="true" data-globe data-scene={spline.globeUrl}>
+  <canvas></canvas>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-globe]');
+  const url = root?.dataset.scene;
+  const canvas = root?.querySelector('canvas');
+
+  const wants3D = () =>
+    !!url &&
+    window.matchMedia('(min-width: 768px)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !(navigator as any).connection?.saveData;
+
+  async function boot() {
+    if (!root || !canvas || !url) return;
+    const { Application } = await import('@splinetool/runtime');
+    const app = new Application(canvas, { renderMode: 'continuous' });
+    await app.load(url);
+    root.classList.add('ready');
+
+    // Look up by id: the scene root also carries the name “Globe Spin”.
+    const spin = app.findObjectById('c4b0b34b-dbee-4041-aa1e-501b7a611d27') ?? app.findObjectByName('Globe Spin');
+    const orbits = [app.findObjectByName('Orbit Spin 1'), app.findObjectByName('Orbit Spin 2')];
+    const deg = Math.PI / 180;
+    let visible = true;
+    new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(root);
+
+    const tick = (now: number) => {
+      if (visible) {
+        const t = now / 1000;
+        // slow spin + a little extra turn as the visitor scrolls past the hero
+        const scrollTurn = Math.min(window.scrollY, window.innerHeight) / window.innerHeight;
+        if (spin) spin.rotation.y = (t * 6 + scrollTurn * 40) * deg;
+        if (orbits[0]) orbits[0].rotation.y = t * 9 * deg;
+        if (orbits[1]) orbits[1].rotation.y = -t * 6 * deg;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  if (root && wants3D()) {
+    // Wait until the browser is idle so the globe never competes with the hero's first paint.
+    const start = () => boot().catch(() => root.classList.remove('ready'));
+    if ('requestIdleCallback' in window) (window as any).requestIdleCallback(start, { timeout: 2500 });
+    else setTimeout(start, 1200);
+  }
+</script>
+
+<style>
+  .hero-globe {
+    position: absolute; z-index: -1; pointer-events: none;
+    width: min(1150px, 90vw); aspect-ratio: 1;
+    right: 2%; top: 56%; translate: 0 -50%;
+    -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+  }
+  .hero-globe canvas {
+    width: 100%; height: 100%; display: block;
+    opacity: 0; filter: blur(2.5px) saturate(1.15);
+    transition: opacity 1.6s var(--ease);
+  }
+  .hero-globe.ready canvas { opacity: 0.9; }
+  @media (max-width: 999px) { .hero-globe { right: -35%; top: 30%; width: 120vw; } }
+</style>

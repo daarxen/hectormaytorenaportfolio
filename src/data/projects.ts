@@ -11,11 +11,26 @@ import teamCasual from '../assets/photos/team-casual.jpg';
 import ellerBuilding from '../assets/photos/eller-building.jpg';
 import graduation from '../assets/photos/graduation-2026.jpg';
 import commencement from '../assets/photos/commencement.jpg';
+import flyer from '../assets/photos/realestate-flyer.jpg';
 
 export interface Evidence {
   image: ImageMetadata;
   alt: string;
   caption: string;
+}
+
+/** A real, viewable work sample (shown on the case study and in the homepage “Work samples” strip). */
+export interface WorkSample {
+  kind: 'canva' | 'image' | 'youtube';
+  title: string;
+  description: string;
+  credit?: string;
+  /** canva: view URL (embed is derived). youtube: watch URL. */
+  url?: string;
+  /** youtube video id */
+  videoId?: string;
+  image?: ImageMetadata;
+  alt?: string;
 }
 
 export interface Project {
@@ -36,6 +51,7 @@ export interface Project {
   results: string[];
   skills: string[];
   evidence: Evidence[];
+  sample?: WorkSample;
   note?: string;
   pending?: string[]; // what is still needed from Hector
 }
@@ -81,7 +97,15 @@ export const projects: Project[] = [
         caption: 'With my team at the Eller College of Management.',
       },
     ],
-    pending: ['Case topic and our final recommendation', 'Presentation deck or slides (optional download)'],
+    sample: {
+      kind: 'youtube',
+      title: 'ACE 2026 — Full Presentation',
+      description: 'The complete first-place presentation by our team (Purple Team) at the 2026 Arizona Community College Excellence case competition.',
+      credit: 'Team presentation · Video on YouTube',
+      url: 'https://youtu.be/9JFhogvJ2ww',
+      videoId: '9JFhogvJ2ww',
+    },
+    pending: ['Case topic and our final recommendation'],
   },
   {
     slug: 'dyson-strategy-benchmarking',
@@ -123,9 +147,17 @@ export const projects: Project[] = [
         caption: 'The team behind the work.',
       },
     ],
+    sample: {
+      kind: 'canva',
+      title: 'Client Communication Plan — Dyson',
+      description:
+        'Our team’s final presentation (Group 27). My sections: the stakeholder analysis and the Dyson vs. Lululemon customer experience benchmark.',
+      credit: 'Team presentation · Canva design by Sophia Delatorre',
+      url: 'https://www.canva.com/design/DAHXQJx9yOY/T0LC-af2ONcr9DxM5evkUg/view',
+    },
     note:
       'This was an academic project. The “Dyson First Impression” pop-up was a proposed concept and was not implemented by Dyson. This project is not affiliated with or endorsed by Dyson or Lululemon.',
-    pending: ['Confirm these photos are from the Dyson presentation', 'Course name and term', 'Slides or report (optional download)'],
+    pending: ['Course name and term'],
   },
   {
     slug: 'education-and-development',
@@ -174,7 +206,10 @@ export const projects: Project[] = [
     title: 'Real Estate Marketing',
     kicker: 'Marketing · 2023',
     summary:
-      'Hosting open houses for licensed realtors, engaging buyers, researching listings in MLS and producing marketing content.',
+      'Hosting open houses for licensed realtors, bringing in new clients, guiding buyers through the process and producing marketing content.',
+    cover: flyer,
+    coverAlt: 'Real estate flyer designed by Hector: “Real Estate Tucson — Let me help you!” with his photo and contact button.',
+    coverPosition: '50% 30%',
     mode: 'Independent',
     overview:
       'As an Independent Real Estate Marketing Assistant with Realty ONE Group Integrity, I supported licensed realtors with open houses, lead generation and marketing. It gave me direct exposure to how properties are researched, presented and marketed to buyers.',
@@ -182,18 +217,28 @@ export const projects: Project[] = [
       'Represent other professionals well, attract qualified buyers to listings, and make properties stand out online.',
     role: 'Independent marketing assistant supporting licensed realtors.',
     actions: [
-      'Hosted open houses and represented licensed realtors.',
-      'Engaged prospective buyers and collected leads.',
-      'Used MLS to analyze property and listing information.',
-      'Created flyers and TikTok videos with Canva and CapCut.',
+      'Hosted open houses representing licensed realtors, presenting property features and collecting client leads.',
+      'Brought in new customers through cold calling.',
+      'Guided potential buyers through the process, working alongside lenders and inspectors.',
+      'Analyzed market and listing data in MLS to support marketing and client follow-ups.',
+      'Built digital and print marketing for realtors: TikTok videos, social media content and flyers made in Canva and CapCut.',
+      'Assisted with property management.',
     ],
     results: [
-      'Hands-on exposure to the real estate market, listing data and buyer behavior.',
-      'Practical experience creating marketing for real properties.',
+      'Stronger social media presence and listing visibility for the realtors I supported.',
+      'Hands-on experience across the buyer journey, from first contact to financing and inspection.',
     ],
-    skills: ['Marketing', 'MLS research', 'Client communication', 'Canva', 'CapCut'],
+    skills: ['Marketing', 'Sales outreach', 'MLS research', 'Client communication', 'Canva', 'CapCut'],
     evidence: [],
-    pending: ['Sample flyers or TikTok videos (with realtor permission)'],
+    sample: {
+      kind: 'image',
+      title: 'Real Estate Tucson — Marketing Flyer',
+      description: 'A social media flyer I designed in Canva to generate buyer leads in Tucson.',
+      credit: 'Designed by Hector · Canva',
+      image: flyer,
+      alt: 'Flyer reading “Real Estate Tucson. If you are interested in taking a new step in your life by getting your own house, let me help you! Don’t lose time!” with Hector’s photo and a contact phone number.',
+    },
+    pending: ['TikTok video links (optional)'],
   },
 ];
 

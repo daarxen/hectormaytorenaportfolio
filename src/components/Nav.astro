@@ -39,6 +39,7 @@ const href = (id: string) => (home ? `#${id}` : `/#${id}`);
     </nav>
     <div class="mobile-foot">
       <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      <a href={profile.whatsapp} target="_blank" rel="noopener">WhatsApp · {profile.phone}</a>
       <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>

@@ -1,6 +1,6 @@
 ---
-import { Picture } from 'astro:assets';
-import photo from '../assets/photos/recognition-3.jpg';
+import YouTube from './YouTube.astro';
+import { profile } from '../data/site';
 
 const facts = [
   { k: 'Studying', v: 'B.S.B.A. Finance, University of Arizona — Eller College of Management' },
@@ -23,17 +23,12 @@ const facts = [
           to learn, contribute, and grow.
         </p>
 
-        <figure class="photo reveal" style="--d:.1s">
-          <div class="frame">
-            <Picture
-              src={photo}
-              formats={['avif', 'webp']}
-              widths={[480, 800]}
-              sizes="(min-width: 900px) 420px, 90vw"
-              alt="Hector smiling and holding a certificate, standing beside a colleague in front of a black-and-white mural."
-            />
-          </div>
-          <figcaption>Receiving a certificate of recognition.</figcaption>
+        <figure id="intro-video" class="video reveal" style="--d:.1s">
+          <YouTube id={profile.video.id} title={profile.video.title} url={profile.video.url} />
+          <figcaption>
+            <span><strong>Meet Hector</strong> · My professional persona video</span>
+            <a href={profile.video.url} target="_blank" rel="noopener">Watch on YouTube ↗</a>
+          </figcaption>
         </figure>
       </div>
 
@@ -80,10 +75,11 @@ const facts = [
   @media (min-width: 900px) { .about-grid { grid-template-columns: 1.05fr 1fr; } }
   .statement { font-size: var(--step-3); font-weight: 600; line-height: 1.12; margin: 1.25rem 0 1.5rem; max-width: 22ch; }
   .statement .serif { font-size: 1.08em; }
-  .photo { margin: clamp(2.5rem, 5vw, 3.5rem) 0 0; max-width: 420px; }
-  .photo .frame { aspect-ratio: 4 / 5; }
-  .photo :global(img) { object-position: 70% 35%; }
-  figcaption { margin-top: 0.75rem; font-size: 0.85rem; color: var(--fg-muted); }
+  .video { margin: clamp(2.5rem, 5vw, 3.5rem) 0 0; scroll-margin-top: calc(var(--nav-h) + 2rem); }
+  .video figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem; margin-top: 0.85rem; font-size: 0.9rem; color: var(--fg-muted); }
+  .video strong { color: var(--fg); font-weight: 600; }
+  .video a { color: var(--fg-accent); font-weight: 600; text-decoration: none; }
+  .video a:hover { text-decoration: underline; }
 
   .body-col { display: flex; flex-direction: column; gap: 2.5rem; }
   @media (min-width: 900px) { .body-col { padding-top: 3.25rem; } }

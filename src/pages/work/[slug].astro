@@ -2,6 +2,8 @@
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
+import CanvaPresentation from '../../components/CanvaPresentation.astro';
+import YouTube from '../../components/YouTube.astro';
 import { projects, type Project } from '../../data/projects';
 
 export function getStaticPaths() {
@@ -87,6 +89,33 @@ const steps = [
         </aside>
       </div>
 
+      {p.sample && (
+        <div class="wrap">
+          <section class="sample reveal">
+            <p class="eyebrow">Work sample</p>
+            <h2>{p.sample.title}</h2>
+            <p class="muted">{p.sample.description}</p>
+            {p.sample.kind === 'canva' && p.sample.url && (
+              <CanvaPresentation url={p.sample.url} title={p.sample.title} credit={p.sample.credit} />
+            )}
+            {p.sample.kind === 'youtube' && p.sample.videoId && p.sample.url && (
+              <figure class="yt-sample">
+                <YouTube id={p.sample.videoId} title={p.sample.title} url={p.sample.url} thumb="hqdefault" />
+                <figcaption>{p.sample.credit} · <a href={p.sample.url} target="_blank" rel="noopener">Watch on YouTube ↗</a></figcaption>
+              </figure>
+            )}
+            {p.sample.kind === 'image' && p.sample.image && (
+              <figure class="img-sample">
+                <div class="frame">
+                  <Picture src={p.sample.image} formats={['avif', 'webp']} widths={[500, 900]} sizes="(min-width: 800px) 520px, 92vw" alt={p.sample.alt ?? ''} />
+                </div>
+                <figcaption>{p.sample.credit}</figcaption>
+              </figure>
+            )}
+          </section>
+        </div>
+      )}
+
       {p.evidence.length > 0 && (
         <div class="wrap">
           <section class="evidence">
@@ -141,6 +170,14 @@ const steps = [
   .side-card { position: sticky; top: calc(var(--nav-h) + 2rem); padding: 1.75rem; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
   .side-card h2 { font-size: 1rem; margin-bottom: 1rem; }
 
+  .sample { margin-top: clamp(3rem, 6vw, 5rem); display: grid; gap: 1rem; }
+  .sample h2 { font-size: var(--step-2); }
+  .img-sample { margin: 0.5rem 0 0; max-width: 520px; }
+  .yt-sample { margin: 0.5rem 0 0; max-width: 900px; }
+  .yt-sample figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: var(--fg-muted); }
+  .yt-sample a { color: var(--fg-accent); font-weight: 600; text-decoration: none; }
+  .img-sample .frame { aspect-ratio: 1; }
+  .img-sample figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: var(--fg-muted); }
   .evidence { margin-top: clamp(3rem, 6vw, 5rem); }
   .evidence > h2 { font-size: var(--step-2); margin-bottom: 1.5rem; }
   .ev-grid { display: grid; gap: 1.25rem; }

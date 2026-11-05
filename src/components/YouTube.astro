@@ -1,0 +1,51 @@
+---
+/**
+ * Privacy-friendly, fast YouTube embed: shows a thumbnail and only loads the
+ * player (youtube-nocookie.com) after the visitor clicks play.
+ */
+interface Props { id: string; title: string; url: string; thumb?: 'maxresdefault' | 'hqdefault' }
+const { id, title, url, thumb: quality = 'maxresdefault' } = Astro.props;
+const thumb = `https://i.ytimg.com/vi/${id}/${quality}.jpg`;
+---
+<div class="yt" data-yt={id} data-title={title}>
+  <img src={thumb} alt="" loading="lazy" decoding="async" width="1280" height="720" />
+  <button type="button" class="yt-play" aria-label={`Play video: ${title}`}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg>
+  </button>
+  <noscript><a class="yt-fallback" href={url}>Watch on YouTube</a></noscript>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-yt]').forEach((el) => {
+    el.querySelector('button')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${el.dataset.yt}?autoplay=1&rel=0&modestbranding=1`;
+      iframe.title = el.dataset.title ?? 'YouTube video';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      el.replaceChildren(iframe);
+      el.classList.add('playing');
+      iframe.focus();
+    }, { once: true });
+  });
+</script>
+
+<style>
+  .yt {
+    position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 16px; background: #000;
+    box-shadow: 0 30px 70px -35px rgba(32, 36, 43, 0.6);
+  }
+  .yt img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease), opacity 0.4s; }
+  .yt:not(.playing)::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(22, 25, 30, 0.45)); pointer-events: none; }
+  .yt:hover img { transform: scale(1.03); }
+  .yt :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .yt-play {
+    position: absolute; z-index: 1; left: 50%; top: 50%; translate: -50% -50%;
+    width: 76px; height: 76px; border-radius: 50%; border: 0; cursor: pointer;
+    display: grid; place-items: center; color: #fff; background: var(--blue);
+    box-shadow: 0 0 0 10px rgba(52, 120, 246, 0.25); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .yt-play svg { width: 30px; height: 30px; margin-left: 4px; }
+  .yt:hover .yt-play { transform: scale(1.06); box-shadow: 0 0 0 16px rgba(52, 120, 246, 0.2); }
+  .yt-fallback { position: absolute; inset: auto 1rem 1rem auto; color: #fff; }
+</style>

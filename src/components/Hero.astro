@@ -1,7 +1,8 @@
 ---
 import { Picture } from 'astro:assets';
-import portrait from '../assets/photos/hero-portrait.jpg';
+import portrait from '../assets/photos/hero-headshot.jpg';
 import Icon from './Icon.astro';
+import HeroGlobe from './HeroGlobe.astro';
 import { profile } from '../data/site';
 
 const journey = [
@@ -16,6 +17,7 @@ const journey = [
 <section id="home" class="hero theme-dark theme-deep" aria-labelledby="hero-title">
   <div class="glow" aria-hidden="true"></div>
   <div class="grid-lines" aria-hidden="true"></div>
+  <HeroGlobe />
 
   <div class="wrap hero-grid">
     <div class="copy">
@@ -39,6 +41,10 @@ const journey = [
         </a>
         <a class="btn btn-ghost" href="#contact">Contact Me</a>
       </div>
+      <a class="intro-link load" style="--i:6" href="#intro-video">
+        <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>
+        Watch my introduction video
+      </a>
     </div>
 
     <figure class="portrait load" style="--i:2">
@@ -46,9 +52,9 @@ const journey = [
         <Picture
           src={portrait}
           formats={['avif', 'webp']}
-          widths={[360, 600]}
+          widths={[420, 720, 960]}
           sizes="(min-width: 1000px) 420px, 80vw"
-          alt="Hector Maytorena Abreu, smiling, in a navy suit and tie."
+          alt="Portrait of Hector Maytorena Abreu in a navy suit and lavender tie."
           loading="eager"
           fetchpriority="high"
         />
@@ -111,7 +117,11 @@ const journey = [
     aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden; position: relative;
     box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
   }
-  .portrait-frame :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .portrait-frame :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .intro-link { display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 1.5rem; color: var(--offwhite); font: 600 0.95rem var(--font-display); text-decoration: none; }
+  .intro-link:hover { color: var(--blue-glow); }
+  .play { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line-dark); background: rgba(255,255,255,0.06); }
+  .play svg { width: 14px; margin-left: 2px; }
   .portrait-frame::after {
     content: ''; position: absolute; inset: 0;
     background: linear-gradient(180deg, transparent 55%, rgba(22, 25, 30, 0.55));
